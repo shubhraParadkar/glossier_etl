@@ -25,9 +25,16 @@ def process_song_file(cur, filepath):
     #print(user_data)
     cur.execute(user_table_insert, user_data)
 
-    # orders_data = df[['id', 'total_price', 'name',
-    #                   'order_number', 'order_status_url']].values[0].tolist()
-    # cur.execute(orders_table_insert, orders_data)
+    for order in df['orders']:
+        id = order['id']
+        total_price = order['total_price']
+        name = order['name']
+        order_number = order['order_number']
+        order_status_url = order['order_status_url']
+
+    orders_data = [id, total_price, name, order_number, order_status_url]
+
+    cur.execute(orders_table_insert, orders_data)
 
 # this function receive a connection and json path parameters.
 # read the information using pandas and insert into database.
