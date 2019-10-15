@@ -15,8 +15,8 @@ orders_table_drop = "DROP TABLE IF EXISTS orders"
 #"")
 
 user_table_create = ("""CREATE TABLE IF NOT EXISTS users \
-(user_id int PRIMARY KEY, contact_email varchar NOT NULL, phone int NOT NULL, \
-browser_ip varchar, order_number int NOT NULL);
+(user_id int PRIMARY KEY, contact_email text NOT NULL, phone text NOT NULL, \
+browser_ip text, order_number int NOT NULL);
 """)
 
 orders_table_create = ("""CREATE TABLE IF NOT EXISTS orders \
@@ -44,7 +44,7 @@ order_number int NOT NULL, order_status_url varchar NOT NULL);
 user_table_insert = ("""INSERT INTO users (user_id, contact_email, phone, browser_ip, order_number) \
 VALUES (%s, %s, %s, %s, %s) \
 ON CONFLICT (user_id)\
-DO UPDATE SET level = EXCLUDED.level;""")
+DO NOTHING;""")
 
 orders_table_insert = ("""INSERT INTO orders (id, total_price, name, order_number, order_status_url) \
 VALUES (%s, %s, %s, %s, %s) \

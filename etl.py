@@ -12,16 +12,22 @@ from sql_queries import *
 # read the information using pandas and insert into database.
 def process_song_file(cur, filepath):
     # open song file
-    df = pd.read_json(filepath, orient='index')
-    print(df)
+    df = pd.read_json(filepath, orient='columns')
     # insert song record
-    user_data = df[['user_id', 'contact_email', 'phone', 'browser_ip','order_number']].columns[1].tolist()
+    for order in df['orders']:
+        user_id = order['user_id']
+        contact_email = order['contact_email']
+        phone = order['phone']
+        browser_ip = order['browser_ip']
+        order_number = order['order_number']
+
+    user_data = [user_id, contact_email, phone, browser_ip, order_number]
+    #print(user_data)
     cur.execute(user_table_insert, user_data)
 
-    # insert artist record
-    orders_data = df[['id', 'total_price', 'name',
-                      'order_number', 'order_status_url']].values[0].tolist()
-    cur.execute(orders_table_insert, orders_data)
+    # orders_data = df[['id', 'total_price', 'name',
+    #                   'order_number', 'order_status_url']].values[0].tolist()
+    # cur.execute(orders_table_insert, orders_data)
 
 # this function receive a connection and json path parameters.
 # read the information using pandas and insert into database.
