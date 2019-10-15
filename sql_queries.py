@@ -46,7 +46,7 @@ VALUES (%s, %s, %s, %s, %s) \
 ON CONFLICT (user_id)\
 DO UPDATE SET level = EXCLUDED.level;""")
 
-orders_table_insert = ("""INSERT INTO songs (id, total_price, name, order_number, order_status_url) \
+orders_table_insert = ("""INSERT INTO orders (id, total_price, name, order_number, order_status_url) \
 VALUES (%s, %s, %s, %s, %s) \
 ON CONFLICT (id)\
 DO NOTHING;""")
