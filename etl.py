@@ -13,77 +13,56 @@ from sql_queries import *
 def process_song_file(cur, filepath):
     # open song file
     df = pd.read_json(filepath, orient='columns')
-    # insert song record
+    df.fillna("no reason", inplace= True)
+
+    # insert user record
     for order in df['orders']:
         user_id = order['user_id']
         contact_email = order['contact_email']
         phone = order['phone']
-        browser_ip = order['browser_ip']
+        total_price = order['total_price']
+        buyer_accepts_marketing = order['buyer_accepts_marketing']
         order_number = order['order_number']
 
-    user_data = [user_id, contact_email, phone, browser_ip, order_number]
-    #print(user_data)
+    user_data = [user_id, contact_email, phone, total_price, buyer_accepts_marketing, order_number]
     cur.execute(user_table_insert, user_data)
 
+    #insert order data
     for order in df['orders']:
         id = order['id']
+        created_at = order['created_at']
+        updated_at = order['updated_at']
         total_price = order['total_price']
         name = order['name']
         order_number = order['order_number']
+        total_price_usd = order['total_price_usd']
+        app_id = order['app_id']
+        fulfillment_status = order['fulfillment_status']
         order_status_url = order['order_status_url']
 
-    orders_data = [id, total_price, name, order_number, order_status_url]
+    for line_items in df['orders'][0]['line_items']:
+        quantity = line_items['quantity']
+        product_id = line_items['product_id']
+
+    orders_data = [id, created_at, updated_at, total_price, name, order_number,total_price_usd, app_id, fulfillment_status, order_status_url, quantity, product_id]
 
     cur.execute(orders_table_insert, orders_data)
 
-# this function receive a connection and json path parameters.
-# read the information using pandas and insert into database.
+    #insert data for sales_table
+    for order in df['orders']:
+        total_price = order['total_price']
+        created_at = order['created_at']
+        order_number = order['order_number']
+        currency = order['currency']
+        total_line_items_price = order['total_line_items_price']
+        financial_status = order['financial_status']
 
+    for line_items in df['orders'][0]['line_items']:
+        quantity = line_items['quantity']
 
-# def process_log_file(cur, filepath):
-#     # open log file
-#     df = pd.read_json(filepath, lines=True)
-#
-#     # filter by NextSong action
-#     df = df[df['page'] == 'NextUser']
-#
-#     # convert timestamp column to datetime
-#     t = pd.to_datetime(df['ts'], unit='ms')
-#
-#     # insert time data records
-#     time_data = np.transpose(np.array([df['ts'].values, t.dt.hour.values, t.dt.day.values, t.dt.week.values,
-#                                        t.dt.month.values, t.dt.year.values, t.dt.weekday.values]))
-#     column_labels = ('ts', 'hour', 'day', 'week', 'month', 'year', 'weekday')
-#     time_df = pd.DataFrame(data=time_data, columns=column_labels)
-#
-#     # iterate into every row and create a insert statement for every row
-#     for i, row in time_df.iterrows():
-#         cur.execute(time_table_insert, list(row))
-#
-#     # load user table
-#     user_df = df[['userId', 'contact_email', 'phone', 'browser_ip', 'order_number']]
-#
-#     # insert user records
-#     for i, row in user_df.drop_duplicates().iterrows():
-#         cur.execute(user_table_insert, row)
-#
-#     # insert songplay records
-#     for index, row in df.iterrows():
-#         # get songid and artistid from song and artist tables
-#         cur.execute(orders_select, (row.order.encode('utf-8'),
-#                                   row.user.encode('utf-8'), row.length))
-#
-#         # retrieve the information by tuples
-#         results = cur.fetchone()
-#         # asing song_id and artist_id into variables
-#         id, user_id = results if results else (None, None)
-#
-#         # insert songplay record
-#         songplay_data = (row.ts, row.user_id, row.contact_email, id, order_number,
-#                          row.sessionId, row.location, row.userAgent)
-#         cur.execute(orders_table_insert, orders_data)
+    orders_data = [id, created_at, updated_at, total_price, name, order_number,total_price_usd, app_id, fulfillment_status, order_status_url, quantity, product_id]
 
-# iterate into every directory and retrieve json files to process data
+    cur.execute(orders_table_insert, orders_data)
 
 
 def process_data(cur, conn, filepath, func):
