@@ -101,7 +101,7 @@ def main():
     conn = psycopg2.connect("host=data-engineering-test.dev.glossier.io dbname=shubhra_db user=shubhra password=iheartcloudpaint port=80")
     cur = conn.cursor()
 
-    process_data(cur, conn, filepath='/Users/shubhraparadkar/Documents/data', func=process_data_file)
+    process_data(cur, conn, filepath='/Users/shubhraparadkar/Documents/glossier_etl/data', func=process_data_file)
 
     conn.close()
 
