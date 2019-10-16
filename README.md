@@ -1,6 +1,6 @@
 # glossier_etl
 This project was created to help imaginary business analysts look at different analytics coming from certain data files. 
-Data files have been extracted as JSON files and stores in DATA directory. This is an ETL pipeline to a posgreSQL db where tables are created with a specific schema.
+Data files have been extracted as JSON files and stored in DATA directory. This is an ETL pipeline to a posgreSQL db where tables are created with a specific schema.
 
 Prerequisites
 =============
