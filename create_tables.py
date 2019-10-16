@@ -7,20 +7,6 @@ def create_database():
     conn = psycopg2.connect("host=data-engineering-test.dev.glossier.io dbname=shubhra_db user=shubhra password=iheartcloudpaint port=80")
     conn.set_session(autocommit=True)
     cur = conn.cursor()
-
-    # create sparkify database with UTF8 encoding
-    #cur.execute("DROP DATABASE IF EXISTS shubhradb")
-    #cur.execute("CREATE DATABASE shubhradb WITH ENCODING 'utf8' TEMPLATE template0")
-
-    # close connection to default database
-    #conn.close()
-
-    # connect to sparkify database
-    #conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
-    #cur = conn.cursor()
-    #conn.close()
-    #cur = conn.cursor()
-
     return cur, conn
 
 
